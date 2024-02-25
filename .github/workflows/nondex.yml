@@ -1,0 +1,33 @@
+name: Maven Build, Test, and Nondex
+
+on:
+  push:
+    branches:
+      - nondex_action  # Change this to the branch you want to trigger the workflow on
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'  # Add 'adopt' for AdoptOpenJDK distribution
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Install dependencies and skip tests
+        run: mvn install -DskipTests -pl google-cloud-teleport-java -am
+
+      - name: Run specific test
+        run: mvn test -Dtest=com.google.cloud.teleport.bigtable.CassandraRowMapperFnTest#testTinyIntColumn
+
+      - name: Run Nondex test
+        run: mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=com.google.cloud.teleport.bigtable.CassandraRowMapperFnTest#testTinyIntColumn
+
