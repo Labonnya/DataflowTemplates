@@ -26,7 +26,7 @@ jobs:
         run: mvn install -DskipTests -pl google-cloud-teleport-java -am
 
       - name: Run specific test
-        run: mvn test -Dtest=com.google.cloud.teleport.bigtable.CassandraRowMapperFnTest#testTinyIntColumn
+        run: mvn -pl google-cloud-teleport-java test -Dtest=com.google.cloud.teleport.bigtable.CassandraRowMapperFnTest#testTinyIntColumn
 
       - name: Run Nondex test
         run: mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=com.google.cloud.teleport.bigtable.CassandraRowMapperFnTest#testTinyIntColumn
