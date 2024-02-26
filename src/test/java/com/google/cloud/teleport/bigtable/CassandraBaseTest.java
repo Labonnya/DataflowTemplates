@@ -35,19 +35,23 @@ public class CassandraBaseTest {
   static Scassandra scassandra;
 
   private static Map.Entry<Integer, Integer> getFreePort() throws IOException {
-    int firstPort;
     ServerSocket firstSocket = new ServerSocket(0);
-    firstPort = firstSocket.getLocalPort();
-
-    int secondPort;
-    ServerSocket secondSocket = new ServerSocket(0);
-    secondPort = secondSocket.getLocalPort();
-
+    int firstPort = firstSocket.getLocalPort();
     firstSocket.close();
+
+    ServerSocket secondSocket = new ServerSocket(0);
+    int secondPort = secondSocket.getLocalPort();
     secondSocket.close();
 
+    while (secondPort == firstPort) {
+      secondSocket = new ServerSocket(0);
+      secondPort = secondSocket.getLocalPort();
+      secondSocket.close();
+    }
+
     return new SimpleEntry<>(firstPort, secondPort);
-  }
+}
+
 
   @BeforeClass
   public static void startScassandraServer() throws Exception {
